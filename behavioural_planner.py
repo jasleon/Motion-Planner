@@ -248,8 +248,16 @@ class BehaviouralPlanner:
         # Otherwise, find our next waypoint.
         # TODO: INSERT YOUR CODE BETWEEN THE DASHED LINES
         # ------------------------------------------------------------------
-        # while wp_index < len(waypoints) - 1:
-        #   arc_length += ...
+        while wp_index < len(waypoints) - 1:
+            if closest_index == wp_index:
+                wp_index += 1
+            else:
+                current = np.array(waypoints[wp_index][:2])
+                previous = np.array(waypoints[wp_index-1][:2])
+                arc_length += np.linalg.norm(current - previous)
+            
+            if arc_length > self._lookahead:
+                break
         # ------------------------------------------------------------------
 
         return wp_index
@@ -435,8 +443,13 @@ def get_closest_index(waypoints, ego_state):
     closest_index = 0
     # TODO: INSERT YOUR CODE BETWEEN THE DASHED LINES
     # ------------------------------------------------------------------
-    # for i in range(len(waypoints)):
-    #   ...
+    ego_position = np.array(ego_state[:2])
+    for i in range(len(waypoints)):
+        waypoint_location = np.array(waypoints[i][:2])
+        distance = np.linalg.norm(ego_position - waypoint_location)
+        if distance < closest_len:
+            closest_len = distance
+            closest_index = i
     # ------------------------------------------------------------------
 
     return closest_len, closest_index
