@@ -84,7 +84,7 @@ class PathOptimizer:
         # optimization methods.
         # TODO: INSERT YOUR CODE BETWEEN THE DASHED LINES
         # ------------------------------------------------------------------
-        res = scipy.optimize.minimize(self.objective, p0, method='L-BFGS-B', jac=self.objective_grad, bounds=bounds, options={'disp':True})
+        res = scipy.optimize.minimize(self.objective, p0, method='L-BFGS-B', jac=self.objective_grad, bounds=bounds)
         # ------------------------------------------------------------------
 
         spiral = self.sample_spiral(res.x)
@@ -115,14 +115,19 @@ class PathOptimizer:
         # TODO: INSERT YOUR CODE BETWEEN THE DASHED LINES
         # ------------------------------------------------------------------
         # Remember that a, b, c, d and s are lists
-        def integrate(kappa):
-            a = kappa[0]
-            b = kappa[1]
-            c = kappa[2]
-            d = kappa[3]
-            s = kappa[4]
-            return a*s + (b/2)*(s**2) + (c/3)*(s**3) + (d/4)*(s**4)
-        thetas = [integrate(kappa) for kappa in zip(a, b, c, d, s)]
+        
+        # Sub-optimal solution using lists
+        # def integrate(s):
+        #     return a*s + (b/2)*(s**2) + (c/3)*(s**3) + (d/4)*(s**4)
+        # thetas = np.array([integrate(arc_length) for arc_length in s])
+        
+        # Optimal solution using numpy
+        p = np.array([a, b/2, c/3, d/4])
+        x = np.vstack((np.power(s, 1), np.power(s, 2), np.power(s, 3), np.power(s, 4)))
+        thetas = p @ x
+        
+        # Debug thetas
+        # print('thetas:{}'.format(thetas))
         return thetas
         # ------------------------------------------------------------------
 
@@ -178,8 +183,8 @@ class PathOptimizer:
         # TODO: INSERT YOUR CODE BETWEEN THE DASHED LINES
         # ------------------------------------------------------------------
         t_points = self.thetaf(a, b, c, d, s_points)
-        x_points = list(scipy.integrate.cumtrapz(np.cos(t_points), s_points, initial=0))
-        y_points = list(scipy.integrate.cumtrapz(np.sin(t_points), s_points, initial=0))
+        x_points = scipy.integrate.cumtrapz(np.cos(t_points), s_points, initial=0)
+        y_points = scipy.integrate.cumtrapz(np.sin(t_points), s_points, initial=0)
         return [x_points, y_points, t_points]
         # ------------------------------------------------------------------
 
