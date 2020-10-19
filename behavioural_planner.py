@@ -111,7 +111,7 @@ class BehaviouralPlanner:
             # for stop signs, and compute the goal state accordingly.
             # TODO: INSERT YOUR CODE BETWEEN THE DASHED LINES
             # ------------------------------------------------------------------
-            goal_index, stop_sign_found = self.check_for_stop_signs(waypoints, closest_index, goal_index)
+            _, stop_sign_found = self.check_for_stop_signs(waypoints, closest_index, goal_index)
             self._goal_index = goal_index
             self._goal_state = waypoints[goal_index]
             # ------------------------------------------------------------------
@@ -251,15 +251,13 @@ class BehaviouralPlanner:
         # TODO: INSERT YOUR CODE BETWEEN THE DASHED LINES
         # ------------------------------------------------------------------
         while wp_index < len(waypoints) - 1:
-            if closest_index == wp_index:
-                wp_index += 1
-            else:
-                current = np.array(waypoints[wp_index][:2])
-                previous = np.array(waypoints[wp_index-1][:2])
-                arc_length += np.linalg.norm(current - previous)
+            if closest_index != wp_index:
+                arc_length += np.linalg.norm(np.array(waypoints[wp_index][:2]) - np.array(waypoints[wp_index - 1][:2]))
             
             if arc_length > self._lookahead:
                 break
+            
+            wp_index += 1
         # ------------------------------------------------------------------
 
         return wp_index
