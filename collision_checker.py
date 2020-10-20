@@ -178,10 +178,8 @@ class CollisionChecker:
                         if not collision_check_array[j]:
                             # TODO: INSERT YOUR CODE BETWEEN THE DASHED LINES
                             # --------------------------------------------------
-                            _, m = current_path.shape
                             collision_path = np.array(paths[j])
-                            proximity = np.array([np.linalg.norm(current_path[:2, k] - collision_path[:2, k]) for k in range(m)])
-                            score += self._weight * (np.sum(np.power(proximity, -1)) if 0 not in proximity else float('Inf'))
+                            score += self._weight * np.linalg.norm(current_path[:2, -1] - collision_path[:2, -1])
                             # --------------------------------------------------
 
                             pass

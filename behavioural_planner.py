@@ -111,7 +111,7 @@ class BehaviouralPlanner:
             # for stop signs, and compute the goal state accordingly.
             # TODO: INSERT YOUR CODE BETWEEN THE DASHED LINES
             # ------------------------------------------------------------------
-            _, stop_sign_found = self.check_for_stop_signs(waypoints, closest_index, goal_index)
+            goal_index, stop_sign_found = self.check_for_stop_signs(waypoints, closest_index, goal_index)
             self._goal_index = goal_index
             self._goal_state = waypoints[goal_index]
             # ------------------------------------------------------------------
@@ -161,7 +161,7 @@ class BehaviouralPlanner:
                 # that is the lookahead distance away.
                 # TODO: INSERT YOUR CODE BETWEEN THE DASHED LINES
                 # --------------------------------------------------------------
-                goal_index, stop_sign_found = self.check_for_stop_signs(waypoints, closest_index, goal_index)
+                _, stop_sign_found = self.check_for_stop_signs(waypoints, closest_index, goal_index)
                 self._goal_index = goal_index
                 self._goal_state = waypoints[goal_index]
                 # --------------------------------------------------------------
@@ -171,6 +171,7 @@ class BehaviouralPlanner:
                 # TODO: INSERT YOUR CODE BETWEEN THE DASHED LINES
                 # --------------------------------------------------------------
                 if not stop_sign_found:
+                    self._stop_count = 0
                     self._state = FOLLOW_LANE
                 # --------------------------------------------------------------
 
